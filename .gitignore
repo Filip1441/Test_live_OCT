@@ -32,3 +32,8 @@ output/
 .idea/
 .vscode/
 imgui.ini
+
+# Testy i archiwum
+archive/
+tests/
+test/
