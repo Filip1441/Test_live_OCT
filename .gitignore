@@ -1,32 +1,34 @@
-# Prerequisites
-*.d
+# Omijanie ukrytych plikow macOS
+.DS_Store
+.AppleDouble
+.LSOverride
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# Omijanie plikow srodowiska wirtualnego Pythona
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
 
-# Precompiled Headers
-*.gch
-*.pch
+# Omijanie folderow kompilacji C++ (CMake / Make)
+build/
+bin/
+out/
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.*
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# Omijanie plikow z duzymi danymi
+data/
+output/
+*.npy
+*.bin
+*.mat
+*.hdf5
+*.h5
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# Konfiguracje uzytkownika i IDE
+.idea/
+.vscode/
+imgui.ini

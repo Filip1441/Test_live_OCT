@@ -100,10 +100,22 @@ def main():
     num_lambdas, height, width = obj_data.shape
     out_phase = np.zeros((height, width), dtype=np.float32)
 
+    import platform
+    system = platform.system()
+    if system == "Darwin":
+        lib_name = "libphase_oct.dylib"
+    elif system == "Windows":
+        lib_name = "phase_oct.dll" # CMake on Windows typically creates <name>.dll without 'lib' prefix, or libphase_oct.dll depending on config. We'll check both.
+    else:
+        lib_name = "libphase_oct.so"
+
     # Load C++ Shared Library
-    lib_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "bin", "libphase_oct.dylib"))
+    lib_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "bin", lib_name))
+    if system == "Windows" and not os.path.exists(lib_path):
+        lib_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "bin", "libphase_oct.dll"))
+        
     if not os.path.exists(lib_path):
-        print(f"Error: C++ engine not found at {lib_path}. Run 'make bin/libphase_oct.dylib' first.")
+        print(f"Error: C++ engine not found at {lib_path}. Please build the project first.")
         return
 
     lib = ctypes.CDLL(lib_path)

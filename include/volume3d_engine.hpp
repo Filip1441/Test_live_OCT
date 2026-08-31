@@ -4,7 +4,19 @@
 #include <memory>
 #include <string>
 #include <complex>
-#import <Metal/Metal.h>
+
+#ifdef __APPLE__
+    #import <Metal/Metal.h>
+    using NativeDevicePtr = id<MTLDevice>;
+    using NativeCommandQueuePtr = id<MTLCommandQueue>;
+    using NativeTexturePtr = id<MTLTexture>;
+#else
+    // Mock types for Windows/Linux compilation
+    using NativeDevicePtr = void*;
+    using NativeCommandQueuePtr = void*;
+    using NativeTexturePtr = void*;
+#endif
+
 #include "types.hpp"
 #include "config.hpp"
 #include "colormaps.hpp"
@@ -37,7 +49,7 @@ using Volume3DStats = PhaseOctStats;
 
 class Volume3DEngine {
 public:
-    Volume3DEngine(id<MTLDevice> device, int width = RAW_WIDTH, int height = RAW_HEIGHT, int num_lambdas = SWEEP_POINTS);
+    Volume3DEngine(NativeDevicePtr device, int width = RAW_WIDTH, int height = RAW_HEIGHT, int num_lambdas = SWEEP_POINTS);
     ~Volume3DEngine();
 
     void reinitialize(int width, int height, int num_lambdas);
@@ -106,8 +118,8 @@ private:
     void render_phase2d_texture(const uint32_t* lut);
     void update_surface3d_render(float yaw, float pitch, float zoom, float z_scale, const uint32_t* lut);
 
-    id<MTLDevice> device_ = nil;
-    id<MTLCommandQueue> command_queue_ = nil;
+    NativeDevicePtr device_ = nullptr;
+    NativeCommandQueuePtr command_queue_ = nullptr;
 
     int width_ = RAW_WIDTH;
     int height_ = RAW_HEIGHT;
@@ -120,8 +132,8 @@ private:
     std::vector<uint32_t> phase2d_rgba_;  // [Height, Width] RGBA pixels
     std::vector<uint32_t> surface3d_rgba_;// [512, 512] 3D rendered surface viewport
 
-    id<MTLTexture> phase2d_texture_ = nil;
-    id<MTLTexture> surface3d_texture_ = nil;
+    NativeTexturePtr phase2d_texture_ = nullptr;
+    NativeTexturePtr surface3d_texture_ = nullptr;
 };
 
 } // namespace oct
